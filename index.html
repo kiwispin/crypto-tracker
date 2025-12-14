@@ -218,6 +218,64 @@
                 </div>
             </div>
 
+            <!-- Tax Estimator -->
+            <div class="glass-panel p-6 rounded-2xl">
+                <h3 class="text-lg font-semibold mb-2 flex items-center gap-2 text-slate-800 dark:text-white">
+                    <i class="ph-bold ph-calculator text-green-500"></i> Tax Estimator
+                </h3>
+                <p class="text-xs text-slate-500 dark:text-gray-400 mb-4">Estimate net value after Capital Gains Tax.</p>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs text-slate-500 dark:text-gray-400 mb-1.5">Tax Region / Scenario</label>
+                        <div class="relative">
+                            <select id="tax-region" onchange="updateTaxCalc()" class="w-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 block p-3 appearance-none cursor-pointer">
+                                <option value="none" data-rate="0">Tax Free (0%)</option>
+                                <option value="nz" data-rate="dynamic">New Zealand (Progressive Brackets)</option>
+                                <option value="usa_long" data-rate="0.15" selected>USA Long Term (15%)</option>
+                                <option value="usa_short" data-rate="0.30">USA Short Term (Est. 30%)</option>
+                                <option value="uk" data-rate="0.20">UK Capital Gains (20%)</option>
+                                <option value="aus" data-rate="0.235">Australia (>1yr 50% Disc.)</option>
+                                <option value="germany" data-rate="0.263">Germany (Short Term 26.3%)</option>
+                                <option value="india" data-rate="0.30">India (Flat 30%)</option>
+                                <option value="custom" data-rate="0">Custom Rate</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500 dark:text-gray-400">
+                                <i class="ph-bold ph-caret-down"></i>
+                            </div>
+                        </div>
+                        <div id="tax-note" class="text-[10px] text-slate-400 mt-1 italic">Est. Capital Gains Tax rate.</div>
+                    </div>
+
+                    <!-- Custom Rate Input (Hidden by default) -->
+                    <div id="custom-rate-container" class="hidden">
+                         <label class="block text-xs text-slate-500 dark:text-gray-400 mb-1.5">Custom Tax Rate (%)</label>
+                         <input type="number" id="custom-tax-input" placeholder="e.g. 25" oninput="updateTaxCalc()" class="w-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm rounded-xl p-3">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs text-slate-500 dark:text-gray-400 mb-1.5">Total Cost Basis (Investment $)</label>
+                        <input type="number" id="cost-basis" oninput="updateTaxCalc()" placeholder="Total USD invested..." class="w-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 block p-3 placeholder-slate-400 dark:placeholder-gray-500">
+                        <p class="text-[10px] text-slate-400 mt-1">Leave empty to apply tax to total value.</p>
+                    </div>
+
+                    <div class="pt-2 border-t border-slate-200 dark:border-white/10 space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500 dark:text-gray-400">Profit/Loss</span>
+                            <span id="tax-profit" class="font-medium text-slate-800 dark:text-white">$0.00</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500 dark:text-gray-400">Est. Tax</span>
+                            <span id="tax-amount" class="font-medium text-red-500">-$0.00</span>
+                        </div>
+                        <div class="flex justify-between text-base font-bold">
+                            <span class="text-slate-700 dark:text-white">Net Value</span>
+                            <span id="tax-net" class="text-green-500">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Assets List -->
             <div class="glass-panel p-6 rounded-2xl flex-grow flex flex-col">
                 <div class="flex justify-between items-center mb-4">
@@ -275,20 +333,20 @@
                 </div>
                 
                 <!-- Stats Grid (Hidden for Total View, shown for Single Asset) -->
-                <div id="single-asset-stats" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 hidden">
+                <div id="stats-panel" class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 hidden">
                     <div class="bg-slate-100/50 dark:bg-slate-800/30 rounded-xl p-4 border border-slate-200 dark:border-white/5">
-                        <div class="text-slate-500 dark:text-gray-400 text-xs mb-1">24h High</div>
-                        <div class="font-semibold text-slate-800 dark:text-white" id="stat-high">--</div>
+                        <div id="label-high" class="text-slate-500 dark:text-gray-400 text-xs mb-1">Period High</div>
+                        <div id="stat-high" class="font-semibold text-green-500">--</div>
                     </div>
                     <div class="bg-slate-100/50 dark:bg-slate-800/30 rounded-xl p-4 border border-slate-200 dark:border-white/5">
-                        <div class="text-slate-500 dark:text-gray-400 text-xs mb-1">24h Low</div>
-                        <div class="font-semibold text-slate-800 dark:text-white" id="stat-low">--</div>
+                        <div id="label-low" class="text-slate-500 dark:text-gray-400 text-xs mb-1">Period Low</div>
+                        <div id="stat-low" class="font-semibold text-red-500">--</div>
                     </div>
-                    <div class="bg-slate-100/50 dark:bg-slate-800/30 rounded-xl p-4 border border-slate-200 dark:border-white/5">
+                    <div id="box-rank" class="bg-slate-100/50 dark:bg-slate-800/30 rounded-xl p-4 border border-slate-200 dark:border-white/5">
                         <div class="text-slate-500 dark:text-gray-400 text-xs mb-1">Market Cap Rank</div>
                         <div class="font-semibold text-slate-800 dark:text-white" id="stat-rank">--</div>
                     </div>
-                    <div class="bg-slate-100/50 dark:bg-slate-800/30 rounded-xl p-4 border border-slate-200 dark:border-white/5">
+                    <div id="box-vol" class="bg-slate-100/50 dark:bg-slate-800/30 rounded-xl p-4 border border-slate-200 dark:border-white/5">
                         <div class="text-slate-500 dark:text-gray-400 text-xs mb-1">Volume (24h)</div>
                         <div class="font-semibold text-slate-800 dark:text-white" id="stat-vol">--</div>
                     </div>
@@ -312,6 +370,7 @@
         let chartInstance = null;
         let currentTimeRange = '7'; // '7', '30', '365'
         let isLogScale = false;
+        let currentStats = { min: 0, max: 0 };
 
         const COIN_IDS = ['bitcoin', 'ethereum', 'litecoin', 'solana', 'ripple', 'cardano', 'dogecoin', 'polkadot', 'chainlink'];
         
@@ -329,6 +388,15 @@
                 setTheme('light');
             } else {
                 setTheme('dark');
+            }
+
+            // Restore Tax Settings
+            const savedCostBasis = localStorage.getItem('lumina-cost-basis');
+            if(savedCostBasis) document.getElementById('cost-basis').value = savedCostBasis;
+            
+            const savedTaxRegion = localStorage.getItem('lumina-tax-region');
+            if(savedTaxRegion) {
+                document.getElementById('tax-region').value = savedTaxRegion;
             }
 
             await fetchPrices();
@@ -401,6 +469,131 @@
                 chainlink: { usd: 14.2, usd_24h_change: 1.1 }
             };
         }
+
+        // --- Tax Feature Logic ---
+        
+        function updateTaxCalc() {
+            const regionSelect = document.getElementById('tax-region');
+            const customRateInput = document.getElementById('custom-tax-input');
+            const customRateContainer = document.getElementById('custom-rate-container');
+            const costBasisInput = document.getElementById('cost-basis');
+            const taxNote = document.getElementById('tax-note');
+            
+            // Save settings
+            localStorage.setItem('lumina-cost-basis', costBasisInput.value);
+            localStorage.setItem('lumina-tax-region', regionSelect.value);
+
+            // Get Tax Rate
+            let rateAttribute = regionSelect.options[regionSelect.selectedIndex].dataset.rate;
+            let rate = parseFloat(rateAttribute);
+            
+            // Update Note Text based on region
+            if (regionSelect.value === 'nz') {
+                taxNote.innerText = "Applying NZ Income Tax brackets (10.5% - 39%) to profit.";
+            } else if (regionSelect.value === 'usa_short') {
+                taxNote.innerText = "Taxed as ordinary income for assets held < 1 year.";
+            } else if (regionSelect.value === 'none') {
+                 taxNote.innerText = "Lucky you!";
+            } else {
+                taxNote.innerText = "Est. Capital Gains Tax rate.";
+            }
+
+            // Handle Custom Rate UI
+            if (regionSelect.value === 'custom') {
+                customRateContainer.classList.remove('hidden');
+                let customVal = parseFloat(customRateInput.value);
+                if (!isNaN(customVal)) {
+                    rate = customVal / 100;
+                }
+            } else {
+                customRateContainer.classList.add('hidden');
+            }
+
+            // Get Values
+            const totalValue = parseFloat(totalBalanceEl.dataset.value || 0);
+            const costBasis = parseFloat(costBasisInput.value);
+
+            let profit = 0;
+            let taxAmount = 0;
+            let netValue = totalValue;
+
+            // Calculate Profit
+            if (!isNaN(costBasis) && costBasis > 0) {
+                profit = totalValue - costBasis;
+            } else {
+                profit = totalValue; // Assume 0 cost basis if not provided
+            }
+
+            // Calculate Tax
+            if (profit > 0) {
+                if (regionSelect.value === 'nz') {
+                    taxAmount = calculateNZProgressiveTax(profit);
+                } else {
+                    taxAmount = profit * rate;
+                }
+            } else {
+                taxAmount = 0;
+            }
+            
+            netValue = totalValue - taxAmount;
+
+            // Update UI
+            document.getElementById('tax-profit').innerText = formatCurrency(profit);
+            document.getElementById('tax-amount').innerText = '-' + formatCurrency(taxAmount);
+            document.getElementById('tax-net').innerText = formatCurrency(netValue);
+            
+            // Color logic for profit
+            const profitEl = document.getElementById('tax-profit');
+            if(profit >= 0) {
+                profitEl.classList.remove('text-red-500');
+                profitEl.classList.add('text-slate-800', 'dark:text-white');
+            } else {
+                profitEl.classList.add('text-red-500');
+                profitEl.classList.remove('text-slate-800', 'dark:text-white');
+            }
+        }
+
+        function calculateNZProgressiveTax(income) {
+            // NZ Tax Brackets (2024/2025)
+            // $0 - $15,600: 10.5%
+            // $15,601 - $53,500: 17.5%
+            // $53,501 - $78,100: 30%
+            // $78,101 - $180,000: 33%
+            // $180,001+: 39%
+            
+            let tax = 0;
+            let remaining = income;
+
+            // Bracket 1
+            let chunk = Math.min(remaining, 15600);
+            tax += chunk * 0.105;
+            remaining -= chunk;
+            if (remaining <= 0) return tax;
+
+            // Bracket 2 (53500 - 15600 = 37900 width)
+            chunk = Math.min(remaining, 37900);
+            tax += chunk * 0.175;
+            remaining -= chunk;
+            if (remaining <= 0) return tax;
+
+            // Bracket 3 (78100 - 53500 = 24600 width)
+            chunk = Math.min(remaining, 24600);
+            tax += chunk * 0.30;
+            remaining -= chunk;
+            if (remaining <= 0) return tax;
+
+            // Bracket 4 (180000 - 78100 = 101900 width)
+            chunk = Math.min(remaining, 101900);
+            tax += chunk * 0.33;
+            remaining -= chunk;
+            if (remaining <= 0) return tax;
+
+            // Bracket 5 (Over 180k)
+            tax += remaining * 0.39;
+            
+            return tax;
+        }
+
 
         // --- New & Updated Graph Logic ---
 
@@ -514,6 +707,9 @@
             const colors = ['#6366f1', '#a855f7', '#ec4899', '#f43f5e', '#f59e0b', '#10b981', '#3b82f6'];
             let colorIdx = 0;
 
+            // Reset current stats
+            currentStats = { min: Infinity, max: -Infinity };
+
             // 1. Handle Total Line
             if (activeGraphLines.has('total') && Object.keys(portfolio).length > 0) {
                 document.getElementById('total-toggle-indicator').classList.add('opacity-100');
@@ -534,6 +730,12 @@
                         });
                         return sum;
                     });
+
+                    // Update stats
+                    const min = Math.min(...totalData);
+                    const max = Math.max(...totalData);
+                    if(min < currentStats.min) currentStats.min = min;
+                    if(max > currentStats.max) currentStats.max = max;
 
                     // Gradient
                     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
@@ -571,6 +773,13 @@
                 }
 
                 const valueData = history.map(h => h[1] * portfolio[coinId]);
+                
+                // Update stats
+                const min = Math.min(...valueData);
+                const max = Math.max(...valueData);
+                if(min < currentStats.min) currentStats.min = min;
+                if(max > currentStats.max) currentStats.max = max;
+                
                 const color = colors[colorIdx++ % colors.length];
 
                 datasets.push({
@@ -669,14 +878,30 @@
             const titleEl = document.getElementById('chart-title');
             const priceEl = document.getElementById('chart-current-price');
             const badgeEl = document.getElementById('chart-change-badge');
-            const statsPanel = document.getElementById('single-asset-stats');
+            const statsPanel = document.getElementById('stats-panel');
+            const boxRank = document.getElementById('box-rank');
+            const boxVol = document.getElementById('box-vol');
+
+            // Common Updates for Stats Panel (High/Low)
+            document.getElementById('stat-high').innerText = formatCurrency(currentStats.max);
+            document.getElementById('stat-low').innerText = formatCurrency(currentStats.min);
+            
+            // Labels based on time
+            const labelTime = currentTimeRange === '365' ? '1Y' : (currentTimeRange === '30' ? '30D' : '7D');
+            document.getElementById('label-high').innerText = `${labelTime} High`;
+            document.getElementById('label-low').innerText = `${labelTime} Low`;
 
             if (activeGraphLines.has('total')) {
                 titleEl.innerText = "Total Portfolio Value";
                 const totalVal = parseFloat(totalBalanceEl.dataset.value || 0);
                 priceEl.innerText = formatCurrency(totalVal);
                 badgeEl.classList.add('hidden');
-                statsPanel.classList.add('hidden');
+                
+                // Show Panel but hide specific boxes
+                statsPanel.classList.remove('hidden');
+                boxRank.classList.add('hidden');
+                boxVol.classList.add('hidden');
+
             } else if (activeGraphLines.size === 1) {
                 const coinId = Array.from(activeGraphLines)[0];
                 const coinData = prices[coinId];
@@ -687,6 +912,9 @@
                 priceEl.innerText = formatCurrency(val);
                 
                 statsPanel.classList.remove('hidden');
+                boxRank.classList.remove('hidden');
+                boxVol.classList.remove('hidden');
+
                 if(coinData) {
                     badgeEl.innerText = (coinData.usd_24h_change >= 0 ? '+' : '') + coinData.usd_24h_change.toFixed(2) + '%';
                     
@@ -701,8 +929,6 @@
                          badgeEl.classList.remove('hidden');
                     }
                     
-                    document.getElementById('stat-high').innerText = formatCurrency(coinData.usd * 1.02); 
-                    document.getElementById('stat-low').innerText = formatCurrency(coinData.usd * 0.97); 
                     document.getElementById('stat-rank').innerText = "#" + (COIN_IDS.indexOf(coinId) + 1);
                     document.getElementById('stat-vol').innerText = "High";
                 }
@@ -750,6 +976,7 @@
                 assetListEl.innerHTML = '<div class="text-center text-slate-400 dark:text-gray-500 py-8 text-sm italic">No assets added yet.</div>';
                 totalBalanceEl.innerText = '$0.00';
                 totalBalanceEl.dataset.value = 0;
+                updateTaxCalc(); // Update tax even if 0
                 return;
             }
 
@@ -795,6 +1022,9 @@
 
             animateValue(totalBalanceEl, parseFloat(totalBalanceEl.dataset.value || 0), totalValue, 500);
             totalBalanceEl.dataset.value = totalValue;
+            
+            // Recalculate tax whenever portfolio changes
+            updateTaxCalc();
         }
 
         function clearPortfolio() {
