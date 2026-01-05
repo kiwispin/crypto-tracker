@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lumina Crypto Tracker</title>
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
@@ -61,17 +62,17 @@
 
         body.dark-bg-mode {
             background-color: #0f172a;
-            background-image: 
-                radial-gradient(at 0% 0%, var(--bg-grad-1) 0, transparent 50%), 
-                radial-gradient(at 50% 0%, var(--bg-grad-2) 0, transparent 50%), 
+            background-image:
+                radial-gradient(at 0% 0%, var(--bg-grad-1) 0, transparent 50%),
+                radial-gradient(at 50% 0%, var(--bg-grad-2) 0, transparent 50%),
                 radial-gradient(at 100% 0%, var(--bg-grad-3) 0, transparent 50%);
         }
-        
+
         body.light-bg-mode {
             background-color: #f8fafc;
-            background-image: 
-                radial-gradient(at 0% 0%, var(--bg-grad-1) 0, transparent 50%), 
-                radial-gradient(at 50% 0%, var(--bg-grad-2) 0, transparent 50%), 
+            background-image:
+                radial-gradient(at 0% 0%, var(--bg-grad-1) 0, transparent 50%),
+                radial-gradient(at 50% 0%, var(--bg-grad-2) 0, transparent 50%),
                 radial-gradient(at 100% 0%, var(--bg-grad-3) 0, transparent 50%);
         }
 
@@ -92,50 +93,68 @@
         ::-webkit-scrollbar {
             width: 6px;
         }
+
         ::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.05); 
+            background: rgba(0, 0, 0, 0.05);
         }
+
         ::-webkit-scrollbar-thumb {
-            background: rgba(156, 163, 175, 0.5); 
+            background: rgba(156, 163, 175, 0.5);
             border-radius: 4px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
-            background: rgba(156, 163, 175, 0.7); 
+            background: rgba(156, 163, 175, 0.7);
         }
 
         /* New flexible chart container */
         .chart-wrapper {
             position: relative;
             flex: 1;
-            min-height: 300px; /* Min height for mobile */
+            min-height: 300px;
+            /* Min height for mobile */
             width: 100%;
         }
+
         @media (min-width: 1024px) {
             .chart-wrapper {
                 min-height: 0;
             }
         }
-        
+
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .animate-fade-in {
             animation: fadeIn 0.4s ease-out forwards;
         }
-        
+
         .transition-max-height {
             transition: max-height 0.3s ease-in-out;
         }
     </style>
 </head>
 <!-- UPDATED: Body now allows scrolling on mobile (overflow-y-auto) but stays fixed on desktop (lg:h-screen lg:overflow-hidden) -->
-<body class="lg:h-screen w-full min-h-screen flex flex-col text-slate-800 dark:text-white dark-bg-mode transition-colors duration-300 overflow-y-auto lg:overflow-hidden">
+
+<body
+    class="lg:h-screen w-full min-h-screen flex flex-col text-slate-800 dark:text-white dark-bg-mode transition-colors duration-300 overflow-y-auto lg:overflow-hidden">
 
     <!-- Background Decoration -->
     <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div class="absolute top-[10%] left-[10%] w-96 h-96 bg-purple-600/10 dark:bg-purple-600/20 rounded-full blur-3xl mix-blend-multiply dark:mix-blend-screen animate-pulse"></div>
-        <div class="absolute bottom-[10%] right-[10%] w-96 h-96 bg-blue-600/10 dark:bg-blue-600/20 rounded-full blur-3xl mix-blend-multiply dark:mix-blend-screen animate-pulse" style="animation-duration: 4s;"></div>
+        <div
+            class="absolute top-[10%] left-[10%] w-96 h-96 bg-purple-600/10 dark:bg-purple-600/20 rounded-full blur-3xl mix-blend-multiply dark:mix-blend-screen animate-pulse">
+        </div>
+        <div class="absolute bottom-[10%] right-[10%] w-96 h-96 bg-blue-600/10 dark:bg-blue-600/20 rounded-full blur-3xl mix-blend-multiply dark:mix-blend-screen animate-pulse"
+            style="animation-duration: 4s;"></div>
     </div>
 
     <!-- Header (Fixed Height) -->
@@ -144,18 +163,44 @@
             <div class="flex items-center gap-3">
                 <i class="ph-fill ph-polygon text-4xl text-indigo-600 dark:text-indigo-400"></i>
                 <div>
-                    <h1 class="text-2xl font-bold tracking-tight">Lumina <span class="text-indigo-600 dark:text-indigo-400">Tracker</span></h1>
+                    <h1 class="text-2xl font-bold tracking-tight">Lumina <span
+                            class="text-indigo-600 dark:text-indigo-400">Tracker</span></h1>
                     <p class="text-xs text-slate-500 dark:text-gray-400">Real-time Market Data</p>
                 </div>
             </div>
-            
+
             <div class="flex items-center gap-3">
-                 <button onclick="toggleTheme()" class="glass-panel p-2 rounded-full w-10 h-10 flex items-center justify-center text-slate-600 dark:text-gray-300 hover:text-indigo-500 dark:hover:text-white transition-colors" title="Toggle Theme">
+                <div class="relative group">
+                    <button id="currency-btn"
+                        class="glass-panel px-3 py-2 rounded-xl flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                        <span id="currency-display">USD</span>
+                        <i class="ph-bold ph-caret-down text-xs"></i>
+                    </button>
+                    <!-- Dropdown -->
+                    <div
+                        class="absolute right-0 top-full mt-2 w-24 glass-panel rounded-xl overflow-hidden shadow-xl transform scale-95 opacity-0 invisible group-hover:scale-100 group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 flex flex-col p-1">
+                        <button onclick="setCurrency('usd')"
+                            class="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-indigo-50 dark:hover:bg-white/10 text-slate-700 dark:text-gray-200 transition-colors">USD</button>
+                        <button onclick="setCurrency('nzd')"
+                            class="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-indigo-50 dark:hover:bg-white/10 text-slate-700 dark:text-gray-200 transition-colors">NZD</button>
+                        <button onclick="setCurrency('aud')"
+                            class="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-indigo-50 dark:hover:bg-white/10 text-slate-700 dark:text-gray-200 transition-colors">AUD</button>
+                        <button onclick="setCurrency('eur')"
+                            class="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-indigo-50 dark:hover:bg-white/10 text-slate-700 dark:text-gray-200 transition-colors">EUR</button>
+                        <button onclick="setCurrency('gbp')"
+                            class="w-full text-left px-3 py-2 rounded-lg text-sm hover:bg-indigo-50 dark:hover:bg-white/10 text-slate-700 dark:text-gray-200 transition-colors">GBP</button>
+                    </div>
+                </div>
+                <button onclick="toggleTheme()"
+                    class="glass-panel p-2 rounded-full w-10 h-10 flex items-center justify-center text-slate-600 dark:text-gray-300 hover:text-indigo-500 dark:hover:text-white transition-colors"
+                    title="Toggle Theme">
                     <i id="theme-icon" class="ph-bold ph-moon"></i>
                 </button>
 
                 <div class="glass-panel px-6 py-2 rounded-full flex items-center gap-4 text-sm">
-                    <span class="flex items-center gap-2 text-slate-700 dark:text-gray-200"><div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div> Live</span>
+                    <span class="flex items-center gap-2 text-slate-700 dark:text-gray-200">
+                        <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div> Live
+                    </span>
                     <span class="text-slate-300 dark:text-gray-600">|</span>
                     <span id="last-updated" class="text-slate-500 dark:text-gray-400">Updating...</span>
                 </div>
@@ -168,37 +213,47 @@
     <main class="flex-1 lg:min-h-0 w-full max-w-[1600px] mx-auto p-4 md:px-8 pb-6">
         <!-- UPDATED: Grid container uses auto height on mobile, full height on desktop -->
         <div class="lg:h-full h-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
-            
+
             <!-- Left Column -->
             <!-- UPDATED: Responsive height and overflow -->
             <div class="col-span-1 lg:col-span-4 flex flex-col gap-4 lg:h-full h-auto lg:overflow-hidden">
-                
+
                 <!-- Scrollable Container for Left Side -->
                 <!-- UPDATED: On mobile, this expands naturally. On desktop, it scrolls internally. -->
                 <div class="lg:flex-1 lg:overflow-y-auto pr-1 flex flex-col gap-4 custom-scrollbar">
-                    
+
                     <!-- Total Balance Card (Always Visible) -->
-                    <div class="glass-panel p-5 rounded-2xl relative overflow-hidden group cursor-pointer hover:border-indigo-500/50 transition-colors shrink-0" onclick="toggleTotalGraph()">
-                        <div class="absolute -right-10 -top-10 w-40 h-40 bg-indigo-500/10 dark:bg-indigo-500/20 rounded-full blur-2xl group-hover:bg-indigo-500/20 dark:group-hover:bg-indigo-500/30 transition-all duration-500"></div>
-                        
+                    <div class="glass-panel p-5 rounded-2xl relative overflow-hidden group cursor-pointer hover:border-indigo-500/50 transition-colors shrink-0"
+                        onclick="toggleTotalGraph()">
+                        <div
+                            class="absolute -right-10 -top-10 w-40 h-40 bg-indigo-500/10 dark:bg-indigo-500/20 rounded-full blur-2xl group-hover:bg-indigo-500/20 dark:group-hover:bg-indigo-500/30 transition-all duration-500">
+                        </div>
+
                         <div class="flex justify-between items-start">
                             <div>
-                                <h2 class="text-slate-500 dark:text-gray-400 text-sm font-medium mb-1">Total Estimated Value</h2>
+                                <h2 class="text-slate-500 dark:text-gray-400 text-sm font-medium mb-1">Total Estimated
+                                    Value</h2>
                                 <div class="flex items-baseline gap-2">
-                                    <span class="text-3xl font-bold text-slate-900 dark:text-white neon-text" id="total-balance">$0.00</span>
-                                    <span class="text-sm text-slate-500 dark:text-gray-400">USD</span>
+                                    <span class="text-3xl font-bold text-slate-900 dark:text-white neon-text"
+                                        id="total-balance">$0.00</span>
+                                    <span class="text-sm text-slate-500 dark:text-gray-400"
+                                        id="total-currency-label">USD</span>
                                 </div>
                             </div>
-                            <div id="total-toggle-indicator" class="w-6 h-6 rounded-full border border-indigo-500/50 flex items-center justify-center text-indigo-500 dark:text-indigo-400 opacity-0 transition-opacity" title="Total shown on graph">
+                            <div id="total-toggle-indicator"
+                                class="w-6 h-6 rounded-full border border-indigo-500/50 flex items-center justify-center text-indigo-500 dark:text-indigo-400 opacity-0 transition-opacity"
+                                title="Total shown on graph">
                                 <i class="ph-bold ph-chart-line-up"></i>
                             </div>
                         </div>
 
                         <div class="mt-4 flex gap-2 relative z-10">
-                            <button onclick="event.stopPropagation(); refreshData()" class="flex-1 bg-slate-200/50 dark:bg-white/10 hover:bg-slate-300/50 dark:hover:bg-white/20 text-slate-700 dark:text-white text-xs font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
+                            <button onclick="event.stopPropagation(); refreshData()"
+                                class="flex-1 bg-slate-200/50 dark:bg-white/10 hover:bg-slate-300/50 dark:hover:bg-white/20 text-slate-700 dark:text-white text-xs font-medium py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2">
                                 <i class="ph-bold ph-arrows-clockwise"></i> Refresh
                             </button>
-                            <button onclick="event.stopPropagation(); clearPortfolio()" class="flex-1 bg-red-100 dark:bg-red-500/10 hover:bg-red-200 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 text-xs font-medium py-2 px-4 rounded-lg transition-colors">
+                            <button onclick="event.stopPropagation(); clearPortfolio()"
+                                class="flex-1 bg-red-100 dark:bg-red-500/10 hover:bg-red-200 dark:hover:bg-red-500/20 text-red-600 dark:text-red-400 text-xs font-medium py-2 px-4 rounded-lg transition-colors">
                                 Clear
                             </button>
                         </div>
@@ -206,17 +261,20 @@
 
                     <!-- Add Asset Form (Collapsible) -->
                     <div class="glass-panel p-5 rounded-2xl shrink-0 transition-all duration-300" id="panel-add-asset">
-                        <div class="flex justify-between items-center cursor-pointer" onclick="togglePanel('add-asset')">
+                        <div class="flex justify-between items-center cursor-pointer"
+                            onclick="togglePanel('add-asset')">
                             <h3 class="text-base font-semibold flex items-center gap-2 text-slate-800 dark:text-white">
                                 <i class="ph-bold ph-plus-circle text-indigo-500 dark:text-indigo-400"></i> Add Asset
                             </h3>
-                            <i id="icon-add-asset" class="ph-bold ph-caret-down text-slate-500 transition-transform duration-300"></i>
+                            <i id="icon-add-asset"
+                                class="ph-bold ph-caret-down text-slate-500 transition-transform duration-300"></i>
                         </div>
-                        
+
                         <div id="content-add-asset" class="mt-3 space-y-3">
                             <div>
                                 <div class="relative">
-                                    <select id="coin-select" class="w-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 block p-2.5 appearance-none cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
+                                    <select id="coin-select"
+                                        class="w-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 block p-2.5 appearance-none cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
                                         <option value="bitcoin">Bitcoin (BTC)</option>
                                         <option value="ethereum">Ethereum (ETH)</option>
                                         <option value="litecoin">Litecoin (LTC)</option>
@@ -227,14 +285,17 @@
                                         <option value="polkadot">Polkadot (DOT)</option>
                                         <option value="chainlink">Chainlink (LINK)</option>
                                     </select>
-                                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500 dark:text-gray-400">
+                                    <div
+                                        class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500 dark:text-gray-400">
                                         <i class="ph-bold ph-caret-down"></i>
                                     </div>
                                 </div>
                             </div>
                             <div class="flex gap-2">
-                                <input type="number" id="amount-input" placeholder="Amount..." step="any" class="flex-1 bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 block p-2.5 placeholder-slate-400 dark:placeholder-gray-500 transition-colors">
-                                <button onclick="addAsset()" class="text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 font-medium rounded-xl text-sm px-4 py-2.5 transition-all shadow-lg shadow-indigo-500/30">
+                                <input type="number" id="amount-input" placeholder="Amount..." step="any"
+                                    class="flex-1 bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-sm rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 block p-2.5 placeholder-slate-400 dark:placeholder-gray-500 transition-colors">
+                                <button onclick="addAsset()"
+                                    class="text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 font-medium rounded-xl text-sm px-4 py-2.5 transition-all shadow-lg shadow-indigo-500/30">
                                     Add
                                 </button>
                             </div>
@@ -247,12 +308,14 @@
                             <h3 class="text-base font-semibold flex items-center gap-2 text-slate-800 dark:text-white">
                                 <i class="ph-bold ph-calculator text-green-500"></i> Tax Estimator
                             </h3>
-                            <i id="icon-tax" class="ph-bold ph-caret-down text-slate-500 transition-transform duration-300"></i>
+                            <i id="icon-tax"
+                                class="ph-bold ph-caret-down text-slate-500 transition-transform duration-300"></i>
                         </div>
-                        
+
                         <div id="content-tax" class="mt-3 space-y-3">
                             <div class="relative">
-                                <select id="tax-region" onchange="updateTaxCalc()" class="w-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 block p-2.5 appearance-none cursor-pointer">
+                                <select id="tax-region" onchange="updateTaxCalc()"
+                                    class="w-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 block p-2.5 appearance-none cursor-pointer">
                                     <option value="none" data-rate="0">Tax Free (0%)</option>
                                     <option value="nz" data-rate="dynamic">New Zealand (Progressive)</option>
                                     <option value="usa_long" data-rate="0.15" selected>USA Long Term (15%)</option>
@@ -263,23 +326,29 @@
                                     <option value="india" data-rate="0.30">India (Flat 30%)</option>
                                     <option value="custom" data-rate="0">Custom Rate</option>
                                 </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500 dark:text-gray-400">
+                                <div
+                                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500 dark:text-gray-400">
                                     <i class="ph-bold ph-caret-down"></i>
                                 </div>
                             </div>
-                            <div id="tax-note" class="text-[10px] text-slate-400 -mt-1 italic leading-tight">Est. Capital Gains Tax rate.</div>
+                            <div id="tax-note" class="text-[10px] text-slate-400 -mt-1 italic leading-tight">Est.
+                                Capital Gains Tax rate.</div>
 
                             <!-- Custom Rate Input (Hidden by default) -->
                             <div id="custom-rate-container" class="hidden">
-                                <input type="number" id="custom-tax-input" placeholder="Rate %" oninput="updateTaxCalc()" class="w-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-2.5">
+                                <input type="number" id="custom-tax-input" placeholder="Rate %"
+                                    oninput="updateTaxCalc()"
+                                    class="w-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl p-2.5">
                             </div>
 
-                            <input type="number" id="cost-basis" oninput="updateTaxCalc()" placeholder="Cost Basis ($)..." class="w-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 block p-2.5">
+                            <input type="number" id="cost-basis" oninput="updateTaxCalc()" placeholder="Cost Basis..."
+                                class="w-full bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white text-xs rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 block p-2.5">
 
                             <div class="pt-2 border-t border-slate-200 dark:border-white/10 space-y-1">
                                 <div class="flex justify-between text-xs">
                                     <span class="text-slate-500 dark:text-gray-400">Profit/Loss</span>
-                                    <span id="tax-profit" class="font-medium text-slate-800 dark:text-white">$0.00</span>
+                                    <span id="tax-profit"
+                                        class="font-medium text-slate-800 dark:text-white">$0.00</span>
                                 </div>
                                 <div class="flex justify-between text-xs">
                                     <span class="text-slate-500 dark:text-gray-400">Est. Tax</span>
@@ -294,18 +363,23 @@
                     </div>
 
                     <!-- Assets List (Collapsible & Grows) -->
-                    <div class="glass-panel p-5 rounded-2xl flex-grow flex flex-col min-h-[60px] transition-all duration-300" id="panel-assets">
-                        <div class="flex justify-between items-center mb-3 shrink-0 cursor-pointer" onclick="togglePanel('assets')">
+                    <div class="glass-panel p-5 rounded-2xl flex-grow flex flex-col min-h-[60px] transition-all duration-300"
+                        id="panel-assets">
+                        <div class="flex justify-between items-center mb-3 shrink-0 cursor-pointer"
+                            onclick="togglePanel('assets')">
                             <h3 class="text-base font-semibold text-slate-800 dark:text-white">Your Assets</h3>
                             <div class="flex items-center gap-2">
-                                <span class="text-[10px] text-slate-500 dark:text-gray-400" id="assets-subtitle">Show on graph</span>
-                                <i id="icon-assets" class="ph-bold ph-caret-down text-slate-500 transition-transform duration-300"></i>
+                                <span class="text-[10px] text-slate-500 dark:text-gray-400" id="assets-subtitle">Show on
+                                    graph</span>
+                                <i id="icon-assets"
+                                    class="ph-bold ph-caret-down text-slate-500 transition-transform duration-300"></i>
                             </div>
                         </div>
                         <div id="content-assets" class="space-y-2 overflow-y-auto flex-1 pr-1 custom-scrollbar">
                             <!-- Dynamic Items will appear here -->
                             <div id="asset-list" class="space-y-2">
-                                <div class="text-center text-slate-400 dark:text-gray-500 py-8 text-sm italic">No assets added yet.</div>
+                                <div class="text-center text-slate-400 dark:text-gray-500 py-8 text-sm italic">No assets
+                                    added yet.</div>
                             </div>
                         </div>
                     </div>
@@ -315,64 +389,89 @@
             <!-- Right Column: Charts & Details (Flex Column) -->
             <!-- UPDATED: Height and overflow settings for desktop vs mobile -->
             <div class="col-span-1 lg:col-span-8 flex flex-col lg:h-full h-[500px] lg:overflow-hidden">
-                
+
                 <!-- Main Chart Panel (Fills available space) -->
                 <div class="glass-panel p-5 rounded-2xl flex-1 flex flex-col min-h-0">
                     <div class="flex justify-between items-start mb-4 shrink-0">
                         <div>
-                            <h2 class="text-xl font-bold flex items-center gap-2 text-slate-900 dark:text-white" id="chart-title">
+                            <h2 class="text-xl font-bold flex items-center gap-2 text-slate-900 dark:text-white"
+                                id="chart-title">
                                 Portfolio Overview
                             </h2>
                             <div class="flex items-center gap-2 mt-1">
-                                <span class="text-2xl font-bold tracking-tight text-slate-800 dark:text-slate-100" id="chart-current-price">--</span>
-                                <span id="chart-change-badge" class="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hidden">
+                                <span class="text-2xl font-bold tracking-tight text-slate-800 dark:text-slate-100"
+                                    id="chart-current-price">--</span>
+                                <span id="chart-change-badge"
+                                    class="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-200 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hidden">
                                     --%
                                 </span>
                             </div>
                         </div>
-                        
+
                         <div class="flex flex-col items-end gap-2">
-                             <!-- Time Range Controls -->
-                             <div class="flex bg-slate-200 dark:bg-slate-800/50 rounded-lg p-1 border border-slate-300 dark:border-white/5">
-                                <button onclick="setTimeRange('7')" class="px-3 py-1 text-xs font-medium rounded-md bg-white dark:bg-indigo-500 text-indigo-600 dark:text-white shadow-sm transition-all" id="btn-7d">7D</button>
-                                <button onclick="setTimeRange('30')" class="px-3 py-1 text-xs font-medium rounded-md text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white transition-colors" id="btn-1m">1M</button>
-                                <button onclick="setTimeRange('365')" class="px-3 py-1 text-xs font-medium rounded-md text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white transition-colors" id="btn-1y">1Y</button>
-                             </div>
-                             
-                             <!-- Log Scale Toggle -->
-                             <div class="flex items-center gap-2 mt-1">
-                                 <label class="flex items-center gap-2 cursor-pointer group select-none">
+                            <!-- Time Range Controls -->
+                            <div
+                                class="flex bg-slate-200 dark:bg-slate-800/50 rounded-lg p-1 border border-slate-300 dark:border-white/5">
+                                <button onclick="setTimeRange('7')"
+                                    class="px-3 py-1 text-xs font-medium rounded-md bg-white dark:bg-indigo-500 text-indigo-600 dark:text-white shadow-sm transition-all"
+                                    id="btn-7d">7D</button>
+                                <button onclick="setTimeRange('30')"
+                                    class="px-3 py-1 text-xs font-medium rounded-md text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+                                    id="btn-1m">1M</button>
+                                <button onclick="setTimeRange('365')"
+                                    class="px-3 py-1 text-xs font-medium rounded-md text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white transition-colors"
+                                    id="btn-1y">1Y</button>
+                            </div>
+
+                            <!-- Log Scale Toggle -->
+                            <div class="flex items-center gap-2 mt-1">
+                                <label class="flex items-center gap-2 cursor-pointer group select-none">
                                     <div class="relative inline-flex items-center">
-                                        <input type="checkbox" id="log-scale-toggle" class="sr-only peer" onchange="toggleLogScale()">
-                                        <div class="w-8 h-4 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-indigo-600"></div>
+                                        <input type="checkbox" id="log-scale-toggle" class="sr-only peer"
+                                            onchange="toggleLogScale()">
+                                        <div
+                                            class="w-8 h-4 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-indigo-600">
+                                        </div>
                                     </div>
-                                    <span class="text-[10px] text-slate-500 dark:text-gray-400 group-hover:text-slate-700 dark:group-hover:text-gray-300 uppercase tracking-wide font-medium">Log Scale</span>
+                                    <span
+                                        class="text-[10px] text-slate-500 dark:text-gray-400 group-hover:text-slate-700 dark:group-hover:text-gray-300 uppercase tracking-wide font-medium">Log
+                                        Scale</span>
                                 </label>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Chart Wrapper (Expands) -->
                     <div class="chart-wrapper">
                         <canvas id="priceChart"></canvas>
                     </div>
-                    
+
                     <!-- Stats Grid (Shrinkable, fixed at bottom of panel) -->
                     <div id="stats-panel" class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 hidden shrink-0">
-                        <div class="bg-slate-100/50 dark:bg-slate-800/30 rounded-xl p-3 border border-slate-200 dark:border-white/5">
-                            <div id="label-high" class="text-slate-500 dark:text-gray-400 text-[10px] uppercase tracking-wider mb-1">Period High</div>
+                        <div
+                            class="bg-slate-100/50 dark:bg-slate-800/30 rounded-xl p-3 border border-slate-200 dark:border-white/5">
+                            <div id="label-high"
+                                class="text-slate-500 dark:text-gray-400 text-[10px] uppercase tracking-wider mb-1">
+                                Period High</div>
                             <div id="stat-high" class="font-semibold text-green-500 text-sm">--</div>
                         </div>
-                        <div class="bg-slate-100/50 dark:bg-slate-800/30 rounded-xl p-3 border border-slate-200 dark:border-white/5">
-                            <div id="label-low" class="text-slate-500 dark:text-gray-400 text-[10px] uppercase tracking-wider mb-1">Period Low</div>
+                        <div
+                            class="bg-slate-100/50 dark:bg-slate-800/30 rounded-xl p-3 border border-slate-200 dark:border-white/5">
+                            <div id="label-low"
+                                class="text-slate-500 dark:text-gray-400 text-[10px] uppercase tracking-wider mb-1">
+                                Period Low</div>
                             <div id="stat-low" class="font-semibold text-red-500 text-sm">--</div>
                         </div>
-                        <div id="box-rank" class="bg-slate-100/50 dark:bg-slate-800/30 rounded-xl p-3 border border-slate-200 dark:border-white/5">
-                            <div class="text-slate-500 dark:text-gray-400 text-[10px] uppercase tracking-wider mb-1">Market Cap Rank</div>
+                        <div id="box-rank"
+                            class="bg-slate-100/50 dark:bg-slate-800/30 rounded-xl p-3 border border-slate-200 dark:border-white/5">
+                            <div class="text-slate-500 dark:text-gray-400 text-[10px] uppercase tracking-wider mb-1">
+                                Market Cap Rank</div>
                             <div class="font-semibold text-slate-800 dark:text-white text-sm" id="stat-rank">--</div>
                         </div>
-                        <div id="box-vol" class="bg-slate-100/50 dark:bg-slate-800/30 rounded-xl p-3 border border-slate-200 dark:border-white/5">
-                            <div class="text-slate-500 dark:text-gray-400 text-[10px] uppercase tracking-wider mb-1">Volume (24h)</div>
+                        <div id="box-vol"
+                            class="bg-slate-100/50 dark:bg-slate-800/30 rounded-xl p-3 border border-slate-200 dark:border-white/5">
+                            <div class="text-slate-500 dark:text-gray-400 text-[10px] uppercase tracking-wider mb-1">
+                                Volume (24h)</div>
                             <div class="font-semibold text-slate-800 dark:text-white text-sm" id="stat-vol">--</div>
                         </div>
                     </div>
@@ -382,30 +481,40 @@
     </main>
 
     <!-- Notification Toast -->
-    <div id="toast" class="fixed bottom-6 right-6 bg-slate-800 dark:bg-slate-800 text-white px-4 py-3 rounded-xl shadow-lg border border-slate-700 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-50">
+    <div id="toast"
+        class="fixed bottom-6 right-6 bg-slate-800 dark:bg-slate-800 text-white px-4 py-3 rounded-xl shadow-lg border border-slate-700 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-50">
         <i class="ph-fill ph-check-circle text-green-400 text-xl"></i>
         <span id="toast-msg" class="text-sm font-medium">Notification</span>
     </div>
 
     <script>
         // State
-        let portfolio = {}; 
-        let prices = {}; 
+        let portfolio = {};
+        let prices = {};
         let historyCache = {}; // { 'bitcoin': [[time, price], ...] }
-        let activeGraphLines = new Set(['total']); 
+        let activeGraphLines = new Set(['total']);
         let chartInstance = null;
         let currentTimeRange = '7'; // '7', '30', '365'
         let isLogScale = false;
         let currentStats = { min: 0, max: 0 };
+        let currentCurrency = 'usd';
+
+        const CURRENCY_SYMBOLS = {
+            usd: '$',
+            nzd: 'NZ$',
+            aud: 'A$',
+            eur: '€',
+            gbp: '£'
+        };
 
         const COIN_IDS = ['bitcoin', 'ethereum', 'litecoin', 'solana', 'ripple', 'cardano', 'dogecoin', 'polkadot', 'chainlink'];
-        
+
         // DOM Elements
         const totalBalanceEl = document.getElementById('total-balance');
         const assetListEl = document.getElementById('asset-list');
         const lastUpdatedEl = document.getElementById('last-updated');
         const themeIcon = document.getElementById('theme-icon');
-        
+
         // Initial Load
         window.addEventListener('load', async () => {
             // Check local storage for theme
@@ -418,16 +527,23 @@
 
             // Restore Tax Settings
             const savedCostBasis = localStorage.getItem('lumina-cost-basis');
-            if(savedCostBasis) document.getElementById('cost-basis').value = savedCostBasis;
-            
+            if (savedCostBasis) document.getElementById('cost-basis').value = savedCostBasis;
+
             const savedTaxRegion = localStorage.getItem('lumina-tax-region');
-            if(savedTaxRegion) {
+            if (savedTaxRegion) {
                 document.getElementById('tax-region').value = savedTaxRegion;
             }
 
+            // Restore Currency
+            const savedCurrency = localStorage.getItem('lumina-currency');
+            if (savedCurrency && CURRENCY_SYMBOLS[savedCurrency]) {
+                currentCurrency = savedCurrency;
+            }
+            updateCurrencyUI();
+
             await fetchPrices();
             renderPortfolio();
-            updateChart(); 
+            updateChart();
             startAutoRefresh();
         });
 
@@ -435,7 +551,7 @@
             const content = document.getElementById(`content-${id}`);
             const icon = document.getElementById(`icon-${id}`);
             const panel = document.getElementById(`panel-${id}`);
-            
+
             if (content.classList.contains('hidden')) {
                 // Open Panel
                 content.classList.remove('hidden');
@@ -467,7 +583,7 @@
         function setTheme(mode) {
             const html = document.documentElement;
             const body = document.body;
-            
+
             if (mode === 'dark') {
                 html.classList.add('dark');
                 body.classList.remove('light-bg-mode');
@@ -488,51 +604,74 @@
             setInterval(async () => {
                 await fetchPrices();
                 renderPortfolio();
-                if(chartInstance) updateChart(false); 
+                if (chartInstance) updateChart(false);
             }, 60000);
         }
 
         async function fetchPrices() {
             try {
                 lastUpdatedEl.innerText = "Updating...";
-                const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${COIN_IDS.join(',')}&vs_currencies=usd&include_24hr_change=true&include_24h_vol=true&include_market_cap=true`);
+                const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${COIN_IDS.join(',')}&vs_currencies=${currentCurrency}&include_24hr_change=true&include_24h_vol=true&include_market_cap=true`);
                 if (!response.ok) throw new Error("API Limit");
                 prices = await response.json();
-                
+
                 const now = new Date();
                 lastUpdatedEl.innerText = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
                 return true;
             } catch (error) {
                 console.error("Error fetching prices:", error);
                 lastUpdatedEl.innerText = "Offline";
-                if(Object.keys(prices).length === 0) mockData();
+                if (Object.keys(prices).length === 0) mockData();
                 return false;
             }
         }
 
         function mockData() {
-             prices = {
-                bitcoin: { usd: 42000, usd_24h_change: 1.2 },
-                ethereum: { usd: 2200, usd_24h_change: -0.5 },
-                litecoin: { usd: 70, usd_24h_change: 0.8 },
-                solana: { usd: 95, usd_24h_change: 5.4 },
-                ripple: { usd: 0.55, usd_24h_change: -1.2 },
-                cardano: { usd: 0.45, usd_24h_change: 0.2 },
-                dogecoin: { usd: 0.08, usd_24h_change: 2.1 },
-                polkadot: { usd: 7.5, usd_24h_change: -2.3 },
-                chainlink: { usd: 14.2, usd_24h_change: 1.1 }
+            // Basic mock update to prevent crash, ideally scale by currency rates if real app
+            const multiplier = currentCurrency === 'nzd' ? 1.6 : 1;
+
+            prices = {
+                bitcoin: { [currentCurrency]: 42000 * multiplier, [`${currentCurrency}_24h_change`]: 1.2 },
+                ethereum: { [currentCurrency]: 2200 * multiplier, [`${currentCurrency}_24h_change`]: -0.5 },
+                litecoin: { [currentCurrency]: 70 * multiplier, [`${currentCurrency}_24h_change`]: 0.8 },
+                solana: { [currentCurrency]: 95 * multiplier, [`${currentCurrency}_24h_change`]: 5.4 },
+                ripple: { [currentCurrency]: 0.55 * multiplier, [`${currentCurrency}_24h_change`]: -1.2 },
+                cardano: { [currentCurrency]: 0.45 * multiplier, [`${currentCurrency}_24h_change`]: 0.2 },
+                dogecoin: { [currentCurrency]: 0.08 * multiplier, [`${currentCurrency}_24h_change`]: 2.1 },
+                polkadot: { [currentCurrency]: 7.5 * multiplier, [`${currentCurrency}_24h_change`]: -2.3 },
+                chainlink: { [currentCurrency]: 14.2 * multiplier, [`${currentCurrency}_24h_change`]: 1.1 }
             };
         }
 
+        function setCurrency(currency) {
+            if (currentCurrency === currency) return;
+            currentCurrency = currency;
+            localStorage.setItem('lumina-currency', currency);
+
+            // UI Updates
+            updateCurrencyUI();
+
+            // clear data that depends on currency
+            historyCache = {};
+
+            // Refresh
+            refreshData();
+        }
+
+        function updateCurrencyUI() {
+            document.getElementById('currency-display').innerText = currentCurrency.toUpperCase();
+            document.getElementById('total-currency-label').innerText = currentCurrency.toUpperCase();
+        }
+
         // --- Tax Feature Logic ---
-        
+
         function updateTaxCalc() {
             const regionSelect = document.getElementById('tax-region');
             const customRateInput = document.getElementById('custom-tax-input');
             const customRateContainer = document.getElementById('custom-rate-container');
             const costBasisInput = document.getElementById('cost-basis');
             const taxNote = document.getElementById('tax-note');
-            
+
             // Save settings
             localStorage.setItem('lumina-cost-basis', costBasisInput.value);
             localStorage.setItem('lumina-tax-region', regionSelect.value);
@@ -540,14 +679,14 @@
             // Get Tax Rate
             let rateAttribute = regionSelect.options[regionSelect.selectedIndex].dataset.rate;
             let rate = parseFloat(rateAttribute);
-            
+
             // Update Note Text based on region
             if (regionSelect.value === 'nz') {
                 taxNote.innerText = "Applying NZ Income Tax brackets (10.5% - 39%) to profit.";
             } else if (regionSelect.value === 'usa_short') {
                 taxNote.innerText = "Taxed as ordinary income for assets held < 1 year.";
             } else if (regionSelect.value === 'none') {
-                 taxNote.innerText = "Lucky you!";
+                taxNote.innerText = "Lucky you!";
             } else {
                 taxNote.innerText = "Est. Capital Gains Tax rate.";
             }
@@ -588,17 +727,17 @@
             } else {
                 taxAmount = 0;
             }
-            
+
             netValue = totalValue - taxAmount;
 
             // Update UI
             document.getElementById('tax-profit').innerText = formatCurrency(profit);
             document.getElementById('tax-amount').innerText = '-' + formatCurrency(taxAmount);
             document.getElementById('tax-net').innerText = formatCurrency(netValue);
-            
+
             // Color logic for profit
             const profitEl = document.getElementById('tax-profit');
-            if(profit >= 0) {
+            if (profit >= 0) {
                 profitEl.classList.remove('text-red-500');
                 profitEl.classList.add('text-slate-800', 'dark:text-white');
             } else {
@@ -614,7 +753,7 @@
             // $53,501 - $78,100: 30%
             // $78,101 - $180,000: 33%
             // $180,001+: 39%
-            
+
             let tax = 0;
             let remaining = income;
 
@@ -644,7 +783,7 @@
 
             // Bracket 5 (Over 180k)
             tax += remaining * 0.39;
-            
+
             return tax;
         }
 
@@ -654,17 +793,17 @@
         function setTimeRange(days) {
             if (currentTimeRange === days) return;
             currentTimeRange = days;
-            
+
             // Update UI Buttons Logic needed for light mode too
             ['7', '30', '365'].forEach(d => {
                 const btn = document.getElementById(`btn-${d === '30' ? '1m' : d === '365' ? '1y' : '7d'}`);
                 // Reset classes
                 btn.className = "px-3 py-1 text-xs font-medium rounded-md transition-colors shadow-sm";
-                
+
                 const isDark = document.documentElement.classList.contains('dark');
-                
+
                 if (d === days) {
-                    if(isDark) {
+                    if (isDark) {
                         btn.classList.add('bg-indigo-500', 'text-white');
                     } else {
                         btn.classList.add('bg-white', 'text-indigo-600', 'border', 'border-slate-200');
@@ -675,8 +814,8 @@
             });
 
             // Clear cache because time range changed
-            historyCache = {}; 
-            
+            historyCache = {};
+
             // Reload chart
             updateChart(true);
         }
@@ -692,10 +831,10 @@
 
             try {
                 // Determine interval based on range to avoid too many points
-                const interval = currentTimeRange === '365' ? 'daily' : 'daily'; 
+                const interval = currentTimeRange === '365' ? 'daily' : 'daily';
                 // Note: Coingecko auto-adjusts granularity often, but explicit 'daily' is safer for 1Y.
-                
-                const response = await fetch(`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=${currentTimeRange}&interval=${interval}`);
+
+                const response = await fetch(`https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=${currentCurrency}&days=${currentTimeRange}&interval=${interval}`);
                 if (!response.ok) throw new Error("API Limit");
                 const data = await response.json();
                 historyCache[coinId] = data.prices;
@@ -703,15 +842,15 @@
             } catch (e) {
                 console.error(`Failed to fetch history for ${coinId}`, e);
                 // Return dummy data matching range
-                const current = prices[coinId]?.usd || 100;
+                const current = prices[coinId]?.[currentCurrency] || 100;
                 const dummy = [];
                 const now = Date.now();
                 const days = parseInt(currentTimeRange);
                 const points = days > 90 ? 50 : days; // Don't over-generate dummy points
                 const step = (days * 86400000) / points;
-                
-                for(let i=points; i>=0; i--) {
-                    dummy.push([now - (i * step), current * (1 + (Math.random()*0.1 - 0.05))]);
+
+                for (let i = points; i >= 0; i--) {
+                    dummy.push([now - (i * step), current * (1 + (Math.random() * 0.1 - 0.05))]);
                 }
                 return dummy;
             }
@@ -744,7 +883,7 @@
         async function updateChart(animate = true) {
             const ctx = document.getElementById('priceChart').getContext('2d');
             const isDark = document.documentElement.classList.contains('dark');
-            
+
             // Colors based on theme
             const gridColor = isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)';
             const tickColor = isDark ? '#64748b' : '#94a3b8';
@@ -767,19 +906,19 @@
             // 1. Handle Total Line
             if (activeGraphLines.has('total') && Object.keys(portfolio).length > 0) {
                 document.getElementById('total-toggle-indicator').classList.add('opacity-100');
-                
+
                 const coinIds = Object.keys(portfolio);
                 const histories = await Promise.all(coinIds.map(id => getHistory(id)));
-                
+
                 if (histories.length > 0 && histories[0].length > 0) {
                     const baseHistory = histories[0];
                     labels = baseHistory.map(h => new Date(h[0]).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
-                    
+
                     const totalData = baseHistory.map((_, timeIdx) => {
                         let sum = 0;
                         coinIds.forEach((id, coinIdx) => {
                             // Find closest timestamp logic could be better but array indices usually align for daily
-                            const price = histories[coinIdx][timeIdx] ? histories[coinIdx][timeIdx][1] : (histories[coinIdx][histories[coinIdx].length-1][1]);
+                            const price = histories[coinIdx][timeIdx] ? histories[coinIdx][timeIdx][1] : (histories[coinIdx][histories[coinIdx].length - 1][1]);
                             sum += price * portfolio[id];
                         });
                         return sum;
@@ -788,12 +927,12 @@
                     // Update stats
                     const min = Math.min(...totalData);
                     const max = Math.max(...totalData);
-                    if(min < currentStats.min) currentStats.min = min;
-                    if(max > currentStats.max) currentStats.max = max;
+                    if (min < currentStats.min) currentStats.min = min;
+                    if (max > currentStats.max) currentStats.max = max;
 
                     // Gradient
                     const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-                    gradient.addColorStop(0, 'rgba(99, 102, 241, 0.5)'); 
+                    gradient.addColorStop(0, 'rgba(99, 102, 241, 0.5)');
                     gradient.addColorStop(1, 'rgba(99, 102, 241, 0.0)');
 
                     datasets.push({
@@ -811,7 +950,7 @@
                     });
                 }
             } else {
-                 document.getElementById('total-toggle-indicator').classList.remove('opacity-100');
+                document.getElementById('total-toggle-indicator').classList.remove('opacity-100');
             }
 
             // 2. Handle Individual Lines
@@ -827,13 +966,13 @@
                 }
 
                 const valueData = history.map(h => h[1] * portfolio[coinId]);
-                
+
                 // Update stats
                 const min = Math.min(...valueData);
                 const max = Math.max(...valueData);
-                if(min < currentStats.min) currentStats.min = min;
-                if(max > currentStats.max) currentStats.max = max;
-                
+                if (min < currentStats.min) currentStats.min = min;
+                if (max > currentStats.max) currentStats.max = max;
+
                 const color = colors[colorIdx++ % colors.length];
 
                 datasets.push({
@@ -852,14 +991,14 @@
             if (chartInstance) {
                 chartInstance.data.labels = labels;
                 chartInstance.data.datasets = datasets;
-                
+
                 // Update Options dynamically for Log Scale & Theme
                 chartInstance.options.scales.y.type = isLogScale ? 'logarithmic' : 'linear';
                 chartInstance.options.scales.y.grid.color = gridColor;
                 chartInstance.options.scales.x.grid.color = gridColor;
                 chartInstance.options.scales.y.ticks.color = tickColor;
                 chartInstance.options.scales.x.ticks.color = tickColor;
-                
+
                 chartInstance.options.plugins.tooltip.backgroundColor = tooltipBg;
                 chartInstance.options.plugins.tooltip.titleColor = tooltipTitle;
                 chartInstance.options.plugins.tooltip.bodyColor = tooltipText;
@@ -874,7 +1013,7 @@
                         responsive: true,
                         maintainAspectRatio: false,
                         plugins: {
-                            legend: { 
+                            legend: {
                                 display: true,
                                 labels: { color: tickColor }
                             },
@@ -888,9 +1027,9 @@
                                 borderWidth: 1,
                                 padding: 10,
                                 callbacks: {
-                                    label: function(context) {
+                                    label: function (context) {
                                         let val = context.parsed.y;
-                                        return context.dataset.label + ': $' + val.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                                        return context.dataset.label + ': ' + formatCurrency(val);
                                     }
                                 }
                             }
@@ -898,20 +1037,23 @@
                         scales: {
                             x: {
                                 grid: { color: gridColor, drawBorder: false },
-                                ticks: { 
+                                ticks: {
                                     color: tickColor,
-                                    maxTicksLimit: 8 
+                                    maxTicksLimit: 8
                                 }
                             },
                             y: {
                                 type: isLogScale ? 'logarithmic' : 'linear',
                                 grid: { color: gridColor, drawBorder: false },
-                                ticks: { 
+                                ticks: {
                                     color: tickColor,
-                                    callback: function(value) { 
-                                        // Shorten large numbers for axis
-                                        if(value >= 1000) return '$' + (value/1000).toFixed(0) + 'k';
-                                        return '$' + value.toLocaleString(); 
+                                    callback: function (value) {
+                                        return new Intl.NumberFormat('en-US', {
+                                            style: 'currency',
+                                            currency: currentCurrency.toUpperCase(),
+                                            notation: 'compact',
+                                            maximumFractionDigits: 1
+                                        }).format(value);
                                     }
                                 }
                             }
@@ -939,7 +1081,7 @@
             // Common Updates for Stats Panel (High/Low)
             document.getElementById('stat-high').innerText = formatCurrency(currentStats.max);
             document.getElementById('stat-low').innerText = formatCurrency(currentStats.min);
-            
+
             // Labels based on time
             const labelTime = currentTimeRange === '365' ? '1Y' : (currentTimeRange === '30' ? '30D' : '7D');
             document.getElementById('label-high').innerText = `${labelTime} High`;
@@ -950,7 +1092,7 @@
                 const totalVal = parseFloat(totalBalanceEl.dataset.value || 0);
                 priceEl.innerText = formatCurrency(totalVal);
                 badgeEl.classList.add('hidden');
-                
+
                 // Show Panel but hide specific boxes
                 statsPanel.classList.remove('hidden');
                 boxRank.classList.add('hidden');
@@ -960,29 +1102,29 @@
                 const coinId = Array.from(activeGraphLines)[0];
                 const coinData = prices[coinId];
                 const name = coinId.charAt(0).toUpperCase() + coinId.slice(1);
-                
+
                 titleEl.innerText = `${name} Value`;
                 const val = (coinData?.usd || 0) * (portfolio[coinId] || 0);
                 priceEl.innerText = formatCurrency(val);
-                
+
                 statsPanel.classList.remove('hidden');
                 boxRank.classList.remove('hidden');
                 boxVol.classList.remove('hidden');
 
-                if(coinData) {
+                if (coinData) {
                     badgeEl.innerText = (coinData.usd_24h_change >= 0 ? '+' : '') + coinData.usd_24h_change.toFixed(2) + '%';
-                    
+
                     // Reset Classes
                     badgeEl.className = "px-2 py-0.5 rounded-full text-xs font-medium hidden";
-                    
-                    if(coinData.usd_24h_change >= 0) {
+
+                    if (coinData.usd_24h_change >= 0) {
                         badgeEl.classList.add('bg-green-100', 'text-green-700', 'dark:bg-green-500/20', 'dark:text-green-400');
                         badgeEl.classList.remove('hidden');
                     } else {
-                         badgeEl.classList.add('bg-red-100', 'text-red-700', 'dark:bg-red-500/20', 'dark:text-red-400');
-                         badgeEl.classList.remove('hidden');
+                        badgeEl.classList.add('bg-red-100', 'text-red-700', 'dark:bg-red-500/20', 'dark:text-red-400');
+                        badgeEl.classList.remove('hidden');
                     }
-                    
+
                     document.getElementById('stat-rank').innerText = "#" + (COIN_IDS.indexOf(coinId) + 1);
                     document.getElementById('stat-vol').innerText = "High";
                 }
@@ -1015,9 +1157,9 @@
             amountInput.value = '';
             renderPortfolio();
             showToast(`Added ${amount} ${coinId.toUpperCase()}`);
-            
+
             // Clear cache and update to ensure new asset has correct history data for current timeframe
-            historyCache = {}; 
+            historyCache = {};
             updateChart();
         }
 
@@ -1035,17 +1177,17 @@
             }
 
             entries.forEach(([coinId, amount]) => {
-                const price = prices[coinId]?.usd || 0;
+                const price = prices[coinId]?.[currentCurrency] || 0;
                 const value = price * amount;
-                const change = prices[coinId]?.usd_24h_change || 0;
+                const change = prices[coinId]?.[`${currentCurrency}_24h_change`] || 0;
                 totalValue += value;
                 const name = coinId.charAt(0).toUpperCase() + coinId.slice(1);
-                
+
                 const isActive = activeGraphLines.has(coinId);
 
                 const item = document.createElement('div');
                 item.className = `group flex justify-between items-center p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 transition-colors cursor-pointer animate-fade-in border border-transparent ${isActive ? 'border-indigo-500/30 bg-indigo-50 dark:bg-white/5' : ''}`;
-                
+
                 item.onclick = (e) => toggleCoinGraph(coinId, e);
 
                 item.innerHTML = `
@@ -1076,7 +1218,7 @@
 
             animateValue(totalBalanceEl, parseFloat(totalBalanceEl.dataset.value || 0), totalValue, 500);
             totalBalanceEl.dataset.value = totalValue;
-            
+
             // Recalculate tax whenever portfolio changes
             updateTaxCalc();
         }
@@ -1102,7 +1244,7 @@
 
         // Utilities
         function formatCurrency(val) {
-            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: currentCurrency.toUpperCase() }).format(val);
         }
 
         function getCoinIcon(id) {
@@ -1119,9 +1261,9 @@
             const toast = document.getElementById('toast');
             const toastMsg = document.getElementById('toast-msg');
             const icon = toast.querySelector('i');
-            
+
             toastMsg.innerText = msg;
-            
+
             if (isError) {
                 icon.className = "ph-fill ph-warning-circle text-orange-400 text-xl";
             } else {
@@ -1129,7 +1271,7 @@
             }
 
             toast.classList.remove('translate-y-20', 'opacity-0');
-            
+
             setTimeout(() => {
                 toast.classList.add('translate-y-20', 'opacity-0');
             }, 3000);
@@ -1151,4 +1293,5 @@
 
     </script>
 </body>
+
 </html>
